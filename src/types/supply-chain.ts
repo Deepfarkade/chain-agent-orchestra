@@ -31,6 +31,7 @@ export interface AgentResponse {
   summary: string;
   reason: string;
   flagged: boolean;
+  flags?: string[];
   confidence: number;
   execution_time_ms: number;
   metadata?: Record<string, any>;

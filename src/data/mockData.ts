@@ -1,125 +1,95 @@
 import { Agent, AgentResponse, Order } from '@/types/supply-chain';
 
-export const orders: Order[] = [
+export const mockOrders: Order[] = [
   {
     id: 'ORD001',
     customer: 'Tata Steel',
-    material: 'Steel Pipes',
+    items: ['Steel Pipes', 'Steel Beams'],
+    location: 'Mumbai, Maharashtra',
     quantity: 500,
-    unit: 'tons',
-    price: 45000,
-    currency: 'INR',
-    deliveryDate: '2024-07-15',
-    status: 'pending',
-    flagged: false
+    segment: 'Gold',
+    requestedDueDate: '2024-07-15'
   },
   {
     id: 'ORD002',
     customer: 'Reliance Industries',
-    material: 'Aluminium Sheets',
+    items: ['Aluminium Sheets'],
+    location: 'Gujarat, India',
     quantity: 200,
-    unit: 'tons',
-    price: 52000,
-    currency: 'INR',
-    deliveryDate: '2024-08-01',
-    status: 'pending',
-    flagged: false
+    segment: 'Silver',
+    requestedDueDate: '2024-08-01'
   },
   {
     id: 'ORD003',
     customer: 'Adani Group',
-    material: 'Copper Cables',
+    items: ['Copper Cables'],
+    location: 'Ahmedabad, Gujarat',
     quantity: 300,
-    unit: 'km',
-    price: 75000,
-    currency: 'INR',
-    deliveryDate: '2024-07-22',
-    status: 'pending',
-    flagged: false
+    segment: 'Bronze',
+    requestedDueDate: '2024-07-22'
   },
   {
     id: 'ORD004',
     customer: 'Vedanta Resources',
-    material: 'Zinc Ingots',
+    items: ['Zinc Ingots'],
+    location: 'Bhubaneswar, Odisha',
     quantity: 400,
-    unit: 'tons',
-    price: 32000,
-    currency: 'INR',
-    deliveryDate: '2024-08-10',
-    status: 'pending',
-    flagged: false
+    segment: 'Gold',
+    requestedDueDate: '2024-08-10'
   },
   {
     id: 'ORD005',
     customer: 'JSW Steel',
-    material: 'Iron Ore',
+    items: ['Iron Ore'],
+    location: 'Ballari, Karnataka',
     quantity: 600,
-    unit: 'tons',
-    price: 28000,
-    currency: 'INR',
-    deliveryDate: '2024-07-29',
-    status: 'pending',
-    flagged: false
+    segment: 'Silver',
+    requestedDueDate: '2024-07-29'
   },
   {
     id: 'ORD006',
     customer: 'Hindalco Industries',
-    material: 'Aluminium Coils',
+    items: ['Aluminium Coils'],
+    location: 'Renukoot, Uttar Pradesh',
     quantity: 250,
-    unit: 'tons',
-    price: 55000,
-    currency: 'INR',
-    deliveryDate: '2024-08-15',
-    status: 'pending',
-    flagged: false
+    segment: 'Bronze',
+    requestedDueDate: '2024-08-15'
   },
   {
     id: 'ORD007',
     customer: 'Coal India',
-    material: 'Coal',
+    items: ['Coal'],
+    location: 'Kolkata, West Bengal',
     quantity: 700,
-    unit: 'tons',
-    price: 15000,
-    currency: 'INR',
-    deliveryDate: '2024-08-05',
-    status: 'pending',
-    flagged: false
+    segment: 'Gold',
+    requestedDueDate: '2024-08-05'
   },
   {
     id: 'ORD008',
     customer: 'Bharat Petroleum',
-    material: 'Crude Oil',
+    items: ['Crude Oil'],
+    location: 'Chennai, Tamil Nadu',
     quantity: 350,
-    unit: 'tons',
-    price: 68000,
-    currency: 'INR',
-    deliveryDate: '2024-07-18',
-    status: 'pending',
-    flagged: false
+    segment: 'Silver',
+    requestedDueDate: '2024-07-18'
   },
   {
     id: 'ORD009',
     customer: 'Indian Oil Corporation',
-    material: 'Petroleum Products',
+    items: ['Petroleum Products'],
+    location: 'New Delhi, Delhi',
     quantity: 450,
-    unit: 'tons',
-    price: 72000,
-    currency: 'INR',
-    deliveryDate: '2024-08-20',
-    status: 'pending',
-    flagged: false
+    segment: 'Bronze',
+    requestedDueDate: '2024-08-20'
   },
   {
     id: 'ORD010',
     customer: 'Oil and Natural Gas',
-    material: 'Natural Gas',
+    items: ['Natural Gas'],
+    location: 'Dehradun, Uttarakhand',
     quantity: 550,
-    unit: 'tons',
-    price: 60000,
-    currency: 'INR',
-    deliveryDate: '2024-07-25',
-    status: 'pending',
-    flagged: false
+    segment: 'Gold',
+    requestedDueDate: '2024-07-25'
   }
 ];
 
@@ -180,7 +150,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'order-management',
       name: 'Order Management Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Analyzing order details for ORD001. Customer Tata Steel is a Gold tier customer with historical volume of 2.5M tons annually. Current order for 500 tons of steel pipes aligns with their usual requirements.',
       focus: 'Validating order specifications, customer tier verification, and ensuring all mandatory fields are complete for processing pipeline.',
       summary: 'Order validated successfully. Gold tier customer with excellent payment history. All specifications meet standard requirements.',
@@ -193,7 +163,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'inventory',
       name: 'Inventory Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Current steel pipe inventory shows 2,847 tons available across 3 warehouses. Raw material availability is sufficient. Lead time for additional manufacturing is 7-10 days if needed.',
       focus: 'Inventory availability check, raw material sufficiency analysis, and warehouse capacity optimization for fulfillment.',
       summary: 'Sufficient inventory available. No supply constraints identified. Raw materials adequately stocked.',
@@ -206,7 +176,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'capacity',
       name: 'Capacity Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Current production capacity utilization at 78%. Available slots in next 2 weeks can accommodate this order. Machine downtime scheduled for next month may impact future orders but not this one.',
       focus: 'Production scheduling, capacity utilization analysis, and resource allocation for optimal delivery timeline.',
       summary: 'Production capacity available. Can be scheduled for delivery within requested timeframe.',
@@ -219,7 +189,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'pricing',
       name: 'Pricing Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Market analysis shows steel prices have increased 8% in last quarter. Competitor pricing ranges from ₹43,000-₹48,000 per ton. Customer price sensitivity analysis indicates acceptable range up to ₹47,000.',
       focus: 'Dynamic pricing based on market conditions, competitor analysis, customer price elasticity, and profit margin optimization.',
       summary: 'Optimal pricing point identified considering market conditions and customer segment. Price recommendation balances profitability with competitiveness.',
@@ -232,7 +202,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'governance',
       name: 'Tradeoff & Governance Agent',
-      status: 'flagged',
+      status: 'Flagged',
       thinking: 'Pricing recommendation of ₹46,000 exceeds customer budget guidelines by 8.2%. Corporate policy requires management approval for prices above ₹45,000 for this customer segment.',
       focus: 'Policy compliance verification, budget constraint analysis, and risk assessment for pricing deviations.',
       summary: 'Price exceeds established guidelines. Management approval required before proceeding.',
@@ -246,7 +216,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'optimization',
       name: 'Re-Optimization & Promise Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Analyzing delivery optimization options. Standard delivery timeline is 14 days. Express option available for 10 days with 5% premium. Customer location proximity allows for cost-effective logistics.',
       focus: 'Delivery timeline optimization, logistics cost analysis, and service level commitment assessment.',
       summary: 'Standard delivery timeline recommended. Logistics network can support efficient delivery.',
@@ -261,7 +231,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'order-management',
       name: 'Order Management Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Processing order ORD002 for Reliance Industries. Silver tier customer with moderate order volume. Aluminium sheets order for 200 tons.',
       focus: 'Order validation, customer classification verification, and specification compliance check.',
       summary: 'Order processed successfully. Silver tier customer with standard requirements.',
@@ -274,7 +244,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'inventory',
       name: 'Inventory Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Aluminium sheet inventory currently at 450 tons. Quality grade requested is in stock. No immediate supply chain constraints.',
       focus: 'Material availability verification and quality grade confirmation.',
       summary: 'Required materials available in sufficient quantities.',
@@ -287,7 +257,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'capacity',
       name: 'Capacity Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Current aluminium processing capacity at 85%. Available production window in week 3. Minor scheduling adjustment needed.',
       focus: 'Production scheduling and resource allocation optimization.',
       summary: 'Production slot available with minor scheduling adjustments.',
@@ -300,7 +270,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'pricing',
       name: 'Pricing Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Aluminium market prices have been volatile, showing 12% increase over 6 months. Silver tier customer deserves competitive pricing while maintaining healthy margins.',
       focus: 'Market-driven pricing strategy with customer tier considerations.',
       summary: 'Competitive pricing strategy recommended based on market conditions.',
@@ -313,7 +283,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'governance',
       name: 'Tradeoff & Governance Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Pricing within acceptable range for Silver tier customer. No policy violations detected. Standard approval process applies.',
       focus: 'Compliance verification and policy adherence check.',
       summary: 'All governance requirements met. No flags raised.',
@@ -326,7 +296,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
     {
       agent_id: 'optimization',
       name: 'Re-Optimization & Promise Agent',
-      status: 'completed',
+      status: 'Completed',
       thinking: 'Standard 12-day delivery achievable. Customer location has good logistics connectivity. No special handling requirements.',
       focus: 'Delivery optimization and logistics coordination.',
       summary: 'Efficient delivery schedule confirmed within standard timeline.',
@@ -339,3 +309,67 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
   ]
   // Add similar detailed responses for other orders...
 };
+
+// Dashboard metrics
+export const mockDashboardMetrics = {
+  totalOrdersProcessed: 167,
+  ordersAutoApproved: 125,
+  ordersOverridden: 42,
+  totalDiscrepancyValue: 2850000,
+  averageDiscrepancy: 67857,
+  overrideRate: 25.1
+};
+
+// Discrepancy logs for dashboard
+export const mockDiscrepancyLogs = [
+  {
+    order_id: 'ORD001',
+    ai_price: 46000,
+    human_price: 45000,
+    delta: -1000,
+    comment: 'Price reduced due to customer tier policy',
+    segment: 'Gold',
+    timestamp: '2024-08-06T10:30:00Z',
+    reason: 'Budget compliance override'
+  },
+  {
+    order_id: 'ORD003',
+    ai_price: 75000,
+    human_price: 73500,
+    delta: -1500,
+    comment: 'Market adjustment for competitive positioning',
+    segment: 'Bronze',
+    timestamp: '2024-08-06T09:15:00Z',
+    reason: 'Market competitiveness'
+  },
+  {
+    order_id: 'ORD005',
+    ai_price: 28000,
+    human_price: 29200,
+    delta: 1200,
+    comment: 'Premium added for expedited delivery',
+    segment: 'Silver',
+    timestamp: '2024-08-06T08:45:00Z',
+    reason: 'Service level upgrade'
+  },
+  {
+    order_id: 'ORD008',
+    ai_price: 68000,
+    human_price: 66800,
+    delta: -1200,
+    comment: 'Volume discount applied',
+    segment: 'Silver',
+    timestamp: '2024-08-05T16:20:00Z',
+    reason: 'Volume incentive'
+  },
+  {
+    order_id: 'ORD010',
+    ai_price: 60000,
+    human_price: 61500,
+    delta: 1500,
+    comment: 'Risk premium for supply chain constraints',
+    segment: 'Gold',
+    timestamp: '2024-08-05T14:10:00Z',
+    reason: 'Supply risk mitigation'
+  }
+];
