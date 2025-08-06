@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { CalendarIcon, PlayIcon, FilterIcon } from 'lucide-react';
+import { CalendarIcon, PlayIcon, FilterIcon, MapPinIcon, PackageIcon } from 'lucide-react';
 import { Order } from '@/types/supply-chain';
 import { mockOrders } from '@/data/mockData';
 
@@ -16,26 +16,16 @@ interface OrdersTableProps {
 export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps) {
   const [orders] = useState<Order[]>(mockOrders);
   const [selectedSegment, setSelectedSegment] = useState<string>('all');
-  const [selectedPriority, setSelectedPriority] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredOrders = orders.filter(order => {
     const matchesSegment = selectedSegment === 'all' || order.segment === selectedSegment;
-    const matchesPriority = selectedPriority === 'all' || order.priority === selectedPriority;
     const matchesSearch = order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.id.toLowerCase().includes(searchTerm.toLowerCase());
+                         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         order.location.toLowerCase().includes(searchTerm.toLowerCase());
     
-    return matchesSegment && matchesPriority && matchesSearch;
+    return matchesSegment && matchesSearch;
   });
-
-  const getStatusColor = (status: Order['status']) => {
-    switch (status) {
-      case 'Approved': return 'bg-success text-success-foreground';
-      case 'Processing': return 'bg-warning text-warning-foreground';
-      case 'Rejected': return 'bg-destructive text-destructive-foreground';
-      default: return 'bg-muted text-muted-foreground';
-    }
-  };
 
   const getSegmentColor = (segment: Order['segment']) => {
     switch (segment) {
@@ -44,15 +34,6 @@ export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps
       case 'Bronze': return 'bg-gradient-to-r from-orange-400 to-orange-600 text-white';
       default: return 'bg-muted text-muted-foreground';
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
   };
 
   return (
@@ -84,16 +65,6 @@ export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps
                 <SelectItem value="Bronze">Bronze</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
-                <SelectItem value="Rush">Rush</SelectItem>
-                <SelectItem value="Normal">Normal</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
@@ -103,11 +74,11 @@ export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps
               <tr className="border-b border-border">
                 <th className="text-left py-3 px-4 font-semibold text-foreground">Order ID</th>
                 <th className="text-left py-3 px-4 font-semibold text-foreground">Customer</th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">Items</th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">Location</th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">Quantity</th>
                 <th className="text-left py-3 px-4 font-semibold text-foreground">Segment</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Value</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Due Date</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Priority</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Status</th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">Request Date</th>
                 <th className="text-left py-3 px-4 font-semibold text-foreground">Actions</th>
               </tr>
             </thead>
@@ -118,16 +89,25 @@ export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps
                     <span className="font-mono text-sm font-medium text-primary">{order.id}</span>
                   </td>
                   <td className="py-4 px-4">
-                    <div>
-                      <p className="font-medium text-foreground">{order.customer}</p>
-                      <p className="text-sm text-muted-foreground">{order.items.join(', ')}</p>
+                    <p className="font-medium text-foreground">{order.customer}</p>
+                  </td>
+                  <td className="py-4 px-4">
+                    <div className="flex items-center gap-2">
+                      <PackageIcon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-foreground">{order.items.join(', ')}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <Badge className={getSegmentColor(order.segment)}>{order.segment}</Badge>
+                    <div className="flex items-center gap-2">
+                      <MapPinIcon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-foreground">{order.location}</span>
+                    </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="font-semibold text-foreground">{formatCurrency(order.value)}</span>
+                    <span className="font-semibold text-foreground">{order.quantity} units</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <Badge className={getSegmentColor(order.segment)}>{order.segment}</Badge>
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2">
@@ -136,17 +116,9 @@ export function OrdersTable({ onRunAgents, processingOrderId }: OrdersTableProps
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <Badge variant={order.priority === 'Rush' ? 'destructive' : 'secondary'}>
-                      {order.priority}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-4">
-                    <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
-                  </td>
-                  <td className="py-4 px-4">
                     <Button
                       onClick={() => onRunAgents(order.id)}
-                      disabled={processingOrderId === order.id || order.status === 'Approved'}
+                      disabled={processingOrderId === order.id}
                       size="sm"
                       className="bg-gradient-primary hover:shadow-glow transition-smooth"
                     >

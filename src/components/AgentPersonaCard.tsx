@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircleIcon, AlertTriangleIcon, ClockIcon, EyeIcon } from 'lucide-react';
+import { CheckCircleIcon, AlertTriangleIcon, ClockIcon, EyeIcon, BrainIcon, TargetIcon, FileTextIcon } from 'lucide-react';
 import { Agent, AgentResponse } from '@/types/supply-chain';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -83,29 +83,50 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
           </div>
         )}
 
-        {/* Response Summary */}
+        {/* Detailed Response Information */}
         {response && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="space-y-4">
+            {/* Price Recommendation */}
+            <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/20">
               <span className="text-sm font-medium text-foreground">Recommendation:</span>
-              <span className="text-sm font-bold text-primary">
+              <span className="text-lg font-bold text-primary">
                 {formatCurrency(response.recommendation)}
               </span>
             </div>
             
-            {response.confidence && (
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Confidence:</span>
-                <Badge variant="secondary" className="text-xs">
-                  {(response.confidence * 100).toFixed(0)}%
-                </Badge>
+            {/* Thinking Process */}
+            <div className="space-y-3">
+              <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <BrainIcon className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="text-xs font-semibold text-blue-800 mb-1">Thinking</div>
+                  <p className="text-xs text-blue-700 line-clamp-2">{response.thinking}</p>
+                </div>
               </div>
-            )}
 
-            <div className="pt-2 border-t border-border">
-              <p className="text-xs text-muted-foreground line-clamp-2">
-                {response.reason}
-              </p>
+              <div className="flex items-start gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                <TargetIcon className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="text-xs font-semibold text-green-800 mb-1">Focus</div>
+                  <p className="text-xs text-green-700 line-clamp-2">{response.focus}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                <FileTextIcon className="h-4 w-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="text-xs font-semibold text-purple-800 mb-1">Summary</div>
+                  <p className="text-xs text-purple-700 line-clamp-2">{response.summary}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Confidence and Status */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Confidence:</span>
+              <Badge variant="secondary" className="text-xs">
+                {(response.confidence * 100).toFixed(0)}%
+              </Badge>
             </div>
 
             {response.flagged && (
@@ -131,7 +152,7 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
                 View Details
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-3">
                   <span className="text-2xl">{agent.avatar}</span>
@@ -154,7 +175,7 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">Recommendation</label>
-                    <span className="font-bold text-primary">
+                    <span className="font-bold text-primary text-lg">
                       {formatCurrency(response.recommendation)}
                     </span>
                   </div>
@@ -167,9 +188,36 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">Reasoning</label>
-                  <p className="text-sm bg-muted/50 p-4 rounded-lg">{response.reason}</p>
+                {/* Detailed Thinking Process */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <BrainIcon className="h-4 w-4" />
+                      Thinking Process
+                    </label>
+                    <p className="text-sm bg-blue-50 p-4 rounded-lg border border-blue-200">{response.thinking}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <TargetIcon className="h-4 w-4" />
+                      Focus Area
+                    </label>
+                    <p className="text-sm bg-green-50 p-4 rounded-lg border border-green-200">{response.focus}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <FileTextIcon className="h-4 w-4" />
+                      Summary
+                    </label>
+                    <p className="text-sm bg-purple-50 p-4 rounded-lg border border-purple-200">{response.summary}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Detailed Reasoning</label>
+                    <p className="text-sm bg-muted/50 p-4 rounded-lg">{response.reason}</p>
+                  </div>
                 </div>
 
                 {response.metadata && (

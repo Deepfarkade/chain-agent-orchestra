@@ -41,8 +41,9 @@ export default function Home() {
       description: `Running supply chain analysis for ${orderId}`,
     });
 
-    // Simulate sequential agent execution
+    // Simulate sequential agent execution (excluding HIL agent)
     const responses = mockAgentResponses[orderId as keyof typeof mockAgentResponses] || [];
+    const filteredResponses = responses.filter(r => r.agent_id !== 'hil');
     
     for (let i = 0; i < agents.length; i++) {
       // Set current agent to thinking

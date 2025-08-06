@@ -1,12 +1,11 @@
 export interface Order {
   id: string;
   customer: string;
+  items: string[];
+  location: string;
+  quantity: number;
   segment: 'Gold' | 'Silver' | 'Bronze';
   requestedDueDate: string;
-  status: 'Pending' | 'Processing' | 'Approved' | 'Rejected';
-  priority: 'Rush' | 'Normal';
-  value: number;
-  items: string[];
 }
 
 export interface Agent {
@@ -27,6 +26,9 @@ export interface AgentResponse {
   name: string;
   status: 'Completed' | 'Flagged' | 'Error';
   recommendation: number;
+  thinking: string;
+  focus: string;
+  summary: string;
   reason: string;
   flagged: boolean;
   confidence: number;
