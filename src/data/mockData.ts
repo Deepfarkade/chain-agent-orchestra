@@ -306,7 +306,7 @@ export const mockAgentResponses: Record<string, AgentResponse[]> = {
       flagged: false,
       reason: 'Delivery commitment achievable'
     }
-  ]
+  ],
   // Add similar detailed responses for other orders...
 };
 
