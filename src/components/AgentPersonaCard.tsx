@@ -87,7 +87,7 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
         )}
 
         {/* Detailed Response Information */}
-        {response && (
+        {response && showDetails && (
           <div className="space-y-4">
             {/* Price Recommendation - Only for Pricing Agent */}
             {shouldShowPrice && (

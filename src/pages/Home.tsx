@@ -237,6 +237,7 @@ export default function Home() {
                       key={agent.id}
                       agent={agent}
                       response={response}
+                      showDetails={true}
                     />
                   );
                 })}
