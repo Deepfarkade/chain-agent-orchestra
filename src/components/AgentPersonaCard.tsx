@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,8 +54,10 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
     }).format(amount);
   };
 
+  const shouldShowPrice = agent.id === 'pricing' && response?.recommendation;
+
   return (
-    <Card className={getCardClassName()} onClick={() => response && setIsExpanded(true)}>
+    <Card className={getCardClassName()}>
       <div className="p-6">
         {/* Agent Avatar and Status */}
         <div className="flex items-center justify-between mb-4">
@@ -86,13 +89,15 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
         {/* Detailed Response Information */}
         {response && (
           <div className="space-y-4">
-            {/* Price Recommendation */}
-            <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/20">
-              <span className="text-sm font-medium text-foreground">Recommendation:</span>
-              <span className="text-lg font-bold text-primary">
-                {formatCurrency(response.recommendation)}
-              </span>
-            </div>
+            {/* Price Recommendation - Only for Pricing Agent */}
+            {shouldShowPrice && (
+              <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <span className="text-sm font-medium text-foreground">Recommendation:</span>
+                <span className="text-lg font-bold text-primary">
+                  {formatCurrency(response.recommendation)}
+                </span>
+              </div>
+            )}
             
             {/* Thinking Process */}
             <div className="space-y-3">
@@ -146,7 +151,6 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
                 variant="ghost" 
                 size="sm" 
                 className="w-full mt-4 text-xs"
-                onClick={(e) => e.stopPropagation()}
               >
                 <EyeIcon className="h-3 w-3 mr-1" />
                 View Details
@@ -173,19 +177,23 @@ export function AgentPersonaCard({ agent, response, showDetails = false }: Agent
                     <label className="text-sm font-medium text-muted-foreground">Execution Time</label>
                     <span>{response.execution_time_ms}ms</span>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Recommendation</label>
-                    <span className="font-bold text-primary text-lg">
-                      {formatCurrency(response.recommendation)}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Confidence</label>
-                    <div className="flex items-center gap-2">
-                      <Progress value={response.confidence * 100} className="flex-1 h-2" />
-                      <span className="text-sm">{(response.confidence * 100).toFixed(0)}%</span>
-                    </div>
-                  </div>
+                  {shouldShowPrice && (
+                    <>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Recommendation</label>
+                        <span className="font-bold text-primary text-lg">
+                          {formatCurrency(response.recommendation)}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Confidence</label>
+                        <div className="flex items-center gap-2">
+                          <Progress value={response.confidence * 100} className="flex-1 h-2" />
+                          <span className="text-sm">{(response.confidence * 100).toFixed(0)}%</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Detailed Thinking Process */}

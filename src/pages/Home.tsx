@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { OrdersTable } from '@/components/OrdersTable';
 import { AgentPersonaCard } from '@/components/AgentPersonaCard';
@@ -17,6 +18,7 @@ export default function Home() {
   const [showChatPanel, setShowChatPanel] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string>('');
   const [aiRecommendation, setAiRecommendation] = useState<number>(0);
+  const [governanceFlags, setGovernanceFlags] = useState<string[]>([]);
   const { toast } = useToast();
 
   const formatCurrency = (amount: number) => {
@@ -32,6 +34,7 @@ export default function Home() {
     setProcessingOrderId(orderId);
     setCurrentOrderId(orderId);
     setAgentResponses([]);
+    setGovernanceFlags([]);
     
     // Reset all agents to idle
     setAgents(prev => prev.map(agent => ({ ...agent, status: 'idle' })));
@@ -68,6 +71,11 @@ export default function Home() {
         // Add response
         setAgentResponses(prev => [...prev, response]);
 
+        // Collect governance flags
+        if (response.flagged && response.flags) {
+          setGovernanceFlags(prev => [...prev, ...response.flags]);
+        }
+
         toast({
           title: `${response.name} Complete`,
           description: response.flagged ? "⚠️ Flagged for review" : "✅ Analysis complete",
@@ -82,19 +90,16 @@ export default function Home() {
       }
     }
 
-    // Calculate final AI recommendation (weighted average)
-    if (responses.length > 0) {
-      const weightedSum = responses.reduce((sum, resp) => sum + resp.recommendation * resp.confidence, 0);
-      const totalWeight = responses.reduce((sum, resp) => sum + resp.confidence, 0);
-      const finalRecommendation = Math.round(weightedSum / totalWeight);
-      
-      setAiRecommendation(finalRecommendation);
+    // Calculate final AI recommendation (get from pricing agent)
+    const pricingResponse = responses.find(r => r.agent_id === 'pricing');
+    if (pricingResponse) {
+      setAiRecommendation(pricingResponse.recommendation);
       setShowChatPanel(true);
       setProcessingOrderId('');
 
       toast({
         title: "Analysis Complete",
-        description: `Final recommendation: ${formatCurrency(finalRecommendation)}`,
+        description: `Final recommendation: ${formatCurrency(pricingResponse.recommendation)}`,
       });
     }
   };
@@ -124,6 +129,7 @@ export default function Home() {
     setAgentResponses([]);
     setCurrentOrderId('');
     setAiRecommendation(0);
+    setGovernanceFlags([]);
   };
 
   const getRunningCount = () => {
@@ -199,7 +205,7 @@ export default function Home() {
                 </div>
               </div>
               
-              {agentResponses.length > 0 && (
+              {aiRecommendation > 0 && (
                 <div className="mb-4 p-4 bg-muted/30 rounded-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-foreground">
@@ -210,7 +216,7 @@ export default function Home() {
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Based on {agentResponses.length} agent analysis results
+                    Based on pricing agent analysis
                   </p>
                 </div>
               )}
@@ -240,14 +246,17 @@ export default function Home() {
         )}
 
         {/* Chat Panel */}
-        <ChatPanel
-          orderId={currentOrderId}
-          aiRecommendation={aiRecommendation}
-          isVisible={showChatPanel}
-          onApprove={handleApprove}
-          onOverride={handleOverride}
-          onClose={() => setShowChatPanel(false)}
-        />
+        {showChatPanel && (
+          <ChatPanel
+            orderId={currentOrderId}
+            aiRecommendation={aiRecommendation}
+            isVisible={showChatPanel}
+            onApprove={handleApprove}
+            onOverride={handleOverride}
+            onClose={() => setShowChatPanel(false)}
+            governanceFlags={governanceFlags}
+          />
+        )}
       </div>
     </div>
   );
