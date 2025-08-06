@@ -41,9 +41,8 @@ export default function Home() {
       description: `Running supply chain analysis for ${orderId}`,
     });
 
-    // Simulate sequential agent execution (excluding HIL agent)
+    // Simulate sequential agent execution
     const responses = mockAgentResponses[orderId as keyof typeof mockAgentResponses] || [];
-    const filteredResponses = responses.filter(r => r.agent_id !== 'hil');
     
     for (let i = 0; i < agents.length; i++) {
       // Set current agent to thinking
@@ -53,12 +52,13 @@ export default function Home() {
       })));
 
       // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
 
-      if (responses[i]) {
-        const response = responses[i];
-        
-        // Update agent status
+      // Find response for current agent
+      const response = responses.find(r => r.agent_id === agents[i].id);
+      
+      if (response) {
+        // Update agent status based on response
         setAgents(prev => prev.map((agent, index) => ({
           ...agent,
           status: index === i ? (response.flagged ? 'flagged' : 'completed') : agent.status,
@@ -73,6 +73,12 @@ export default function Home() {
           description: response.flagged ? "⚠️ Flagged for review" : "✅ Analysis complete",
           variant: response.flagged ? "destructive" : "default"
         });
+      } else {
+        // If no response, just mark as completed
+        setAgents(prev => prev.map((agent, index) => ({
+          ...agent,
+          status: index === i ? 'completed' : agent.status
+        })));
       }
     }
 
